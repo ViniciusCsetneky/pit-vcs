@@ -1,6 +1,6 @@
 import os
 import hashlib
-from core.repo import require_repo, get_repo_path
+from core.repo import require_repo, require_login, get_repo_path
 from core.storage import read_json, write_json
 
 def hash_content(content):
@@ -8,6 +8,7 @@ def hash_content(content):
 
 def add(caminho):
     require_repo()
+    require_login()
 
     if not os.path.isfile(caminho):
         print(f"Erro: arquivo '{caminho}' nao encontrado")
