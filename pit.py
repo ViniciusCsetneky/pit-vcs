@@ -1,37 +1,41 @@
-import sys
+#!/usr/bin/env python3
+import argparse
 from commands.init import init
 from commands.auth import register, login, logout
 from commands.add import add
 from commands.commit import commit
 
 def main():
-    if len(sys.argv) < 2:
-        print("Uso: pit <comando>")
-        print("Comandos disponíveis: init, register, login, logout, add, commit")
-        return
+    parser = argparse.ArgumentParser(prog="pit")
+    subparsers = parser.add_subparsers(dest="comando")
 
-    comando = sys.argv[1]
+    subparsers.add_parser("init")
+    subparsers.add_parser("register")
+    subparsers.add_parser("login")
+    subparsers.add_parser("logout")
 
-    if comando == "init":
+    add_parser = subparsers.add_parser("add")
+    add_parser.add_argument("arquivo")
+
+    commit_parser = subparsers.add_parser("commit")
+    commit_parser.add_argument("-m", "--mensagem", required=True)
+
+    args = parser.parse_args()
+
+    if args.comando == "init":
         init()
-    elif comando == "register":
+    elif args.comando == "register":
         register()
-    elif comando == "login":
+    elif args.comando == "login":
         login()
-    elif comando == "logout":
+    elif args.comando == "logout":
         logout()
-    elif comando == "add":
-        if len(sys.argv) < 3:
-            print("Uso: pit add <arquivo>")
-            return
-        add(sys.argv[2])
-    elif comando == "commit":
-        if len(sys.argv) < 3:
-            print("Uso: pit commit <mensagem>")
-            return
-        commit(sys.argv[2])
+    elif args.comando == "add":
+        add(args.arquivo)
+    elif args.comando == "commit":
+        commit(args.mensagem)
     else:
-        print(f"Comando '{comando}' não reconhecido.")
+        parser.print_help()
 
 if __name__ == "__main__":
     main()
